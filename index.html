@@ -28,7 +28,7 @@
         <br />
         <br />
 
-        <datepicker v-model="testDate" v-on:sendDate(onpicked($event.target.value))></datepicker>
+        <datepicker v-model="testDate"></datepicker>
         {{testDate}}
 
         
@@ -38,7 +38,9 @@
     <script>
         var myDatepicker = {
             props: 'acutallyDate',
-            template: '<div><input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" /><br/> Selected:{{myDate}}</div>',
+            template: `<div>
+                <input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" /><br/> 
+                Selected:{{myDate}}</div>`,
             data: function () {
                 return {
                     myDate: 'Hello World!'
@@ -57,15 +59,20 @@
                     var _this = this;
                     WdatePicker({
                         el: _this.datepickerId,
-                        onpicked(value) {
+                        onpicked() {
                             _this.myDate = $dp.cal.getDateStr();
-                            _this.acutallyDate = _this.myDate;
-                            _this.$emit('sendDate', value);
+                            // _this.acutallyDate = _this.myDate;
+                             _this.$emit('input', $dp.cal.getDateStr());
                         },
                         oncleared() {
                             _this.myDate = '';
                         },
                     });
+                },
+                sendToParent(){
+                    console.log("123");
+                    this.$emit('input', this.myDate);
+
                 },
                 generateUUID() {
                     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -77,11 +84,17 @@
         };
 
         var childToParent = {
-            template: '<input type="text" v-bind:value="value2" v-on:input="updateValue($event.target.value)">',
+            template: '<div><input type="text" v-model="childVal" v-on:input="updateValue()"></div>',
             props: ['value2'],
+            data: function(){
+                return {
+                    childVal:'123'
+                }
+            },
             methods: {
                 updateValue: function (vale) {
-                    this.$emit('input', vale);
+                    //alert(this.childVal);
+                    this.$emit('input', this.childVal);
                 }
             }
         };
