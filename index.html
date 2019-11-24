@@ -1,45 +1,72 @@
 <html>
-    <!-- WdatePicker only can use id -->
-    <head>
-        <link rel="styeSheet" href="My97DatePicker/skin/WdatePicker.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
-        <script src="My97DatePicker/WdatePicker.js"></script>
+<!-- WdatePicker only can use id -->
 
-        
-    </head> 
-    <body>
-        <div id="app">
-        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1" @click="clickDate('datePick1')"/>
+<head>
+    <link rel="styeSheet" href="My97DatePicker/skin/WdatePicker.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="My97DatePicker/WdatePicker.js"></script>
 
-            {{test}} <br/>
-            SelectDate: {{date1}}
-            
+
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1" @click="clickDate('datePick1', 'date1')" />
+        {{test}} <br />
+        SelectDate: {{date1}}
+        <br />
+        <!--  @click="clickDate('dateFor' + i, 'fors.date')"  -->
+        <div v-for="(item, i) in fors">
+            {{i}}. <input type="text" name="" :id="'dateFor' + i" class="Wdate" @click="clickDate2('dateFor' + i,i, 'date')" />
+            <br/>
+            {{item.date}}
+            <br/><br/>
         </div>
-        <script>
+    </div>
+    <script>
         var vue = new Vue({
             el: '#app',
-            data:{
-                test:'test2',
+            data: {
+                test: 'test2',
                 date1: '',
+                fors: [
+                    {date:'A'},
+                    {date:'B'},
+                    {date:'C'},
+                ]
             },
-            methods:{
-                clickDate(targetId, $event) {
+            methods: {
+                clickDate(targetId, modelName) {
+                    console.log(modelName);
                     var _this = this;
-                    console.log($event);
                     WdatePicker({
                         el: targetId,
-                        isShowWeek:true,
+                        isShowWeek: true,
                         onpicked() {
-                            _this.date1 = $dp.cal.getDateStr();
+                            _this[modelName] = $dp.cal.getDateStr();
                         },
-                        oncleared(){
-                            _this.date1 = '';
+                        oncleared() {
+                            _this[modelName] = '';
+                        },
+                    });
+                },
+                clickDate2(targetId, idx, modelName) {
+                    var _this = this;
+                    WdatePicker({
+                        el: targetId,
+                        isShowWeek: true,
+                        onpicked() {
+                            _this.fors[idx][modelName] = $dp.cal.getDateStr();
+                        },
+                        oncleared() {
+                            _this.fors[idx][modelName] = '';
                         },
                     });
                 }
             }
-        });
-        </script>
-    </body>
+        });  
+    </script>
+</body>
+
 </html>
