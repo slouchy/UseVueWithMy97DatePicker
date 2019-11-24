@@ -12,28 +12,75 @@
 
 <body>
     <div id="app">
-        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1" @click="clickDate('datePick1', 'date1')" />
+        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1"
+            @click="clickDate('datePick1', 'date1')" />
         {{test}} <br />
         SelectDate: {{date1}}
         <br />
         <!--  @click="clickDate('dateFor' + i, 'fors.date')"  -->
         <div v-for="(item, i) in fors">
-            {{i}}. <input type="text" name="" :id="'dateFor' + i" class="Wdate" @click="clickDate2('dateFor' + i,i, 'date')" />
-            <br/>
+            {{i}}. <input type="text" name="" :id="'dateFor' + i" class="Wdate"
+                @click="clickDate2('dateFor' + i,i, 'date')" />
+            <br />
             {{item.date}}
-            <br/><br/>
+            <br />
         </div>
+        <br />
+        <br />
+
+        
+        <prompt-component></prompt-component>
+
+        
     </div>
     <script>
+        var myDatepicker = {
+            template: '<input type="text" name="" id="" class="Wdate">',
+            data: function () {
+                return {
+                    message: 'X'
+                }
+            },
+            methods: {
+                
+            }
+        };
+
+        var Prompt = {
+            template: '<div><p>${ message }</p><button @click="sayHi">Say Hi!</button></div>',
+            delimiters: ['${', '}'],
+            data: function () {
+                return {
+                    message: 'Hello World!'
+                }
+            },
+            methods: {
+                sayHi: function () {
+                    alert('Hi');
+                }
+            }
+        };
+
+
+
         var vue = new Vue({
             el: '#app',
+            components: {
+                'datepicker': myDatepicker,
+                'prompt-component':Prompt
+            },
             data: {
                 test: 'test2',
                 date1: '',
                 fors: [
-                    {date:'A'},
-                    {date:'B'},
-                    {date:'C'},
+                    { date: 'A' },
+                    { date: 'B' },
+                    { date: 'C' },
+                ],
+                fors2: [
+                    { date: 'A' },
+                    { date: 'B' },
+                    { date: 'C' },
                 ]
             },
             methods: {
