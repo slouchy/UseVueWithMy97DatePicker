@@ -28,46 +28,47 @@
         <br />
         <br />
 
-        
-        <prompt-component></prompt-component>
-
-        
+        <datepicker></datepicker>
     </div>
     <script>
         var myDatepicker = {
-            template: '<input type="text" name="" id="" class="Wdate">',
-            data: function () {
-                return {
-                    message: 'X'
+            props: '',
+            template: '<input type="text" name="" :id="datepickerId" class="Wdate" @click="clickDate" />',
+            data: {
+                datepickerId: new Date().getTime()
+            },
+            computed:{
+                'datepickerId'() {
+                    return this.generateUUID();
                 }
             },
             methods: {
-                
+                clickDate() {
+                    //alert("User Click");
+                    var _this = this;
+                    WdatePicker({
+                        el: targetId,
+                        onpicked() {
+                            _this.fors[idx][modelName] = $dp.cal.getDateStr();
+                        },
+                        oncleared() {
+                            _this.fors[idx][modelName] = '';
+                        },
+                    });
+                },
+                generateUUID() {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                        return v.toString(16);
+                    });
+                }
             }
         };
-
-        var Prompt = {
-            template: '<div><p>${ message }</p><button @click="sayHi">Say Hi!</button></div>',
-            delimiters: ['${', '}'],
-            data: function () {
-                return {
-                    message: 'Hello World!'
-                }
-            },
-            methods: {
-                sayHi: function () {
-                    alert('Hi');
-                }
-            }
-        };
-
-
 
         var vue = new Vue({
             el: '#app',
             components: {
                 'datepicker': myDatepicker,
-                'prompt-component':Prompt
             },
             data: {
                 test: 'test2',
