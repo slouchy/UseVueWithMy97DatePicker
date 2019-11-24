@@ -28,51 +28,77 @@
         <br />
         <br />
 
-        <datepicker></datepicker>
+        <datepicker v-model="testDate" v-on:sendDate(onpicked($event.target.value))></datepicker>
+        {{testDate}}
+
+        
+            <p>Parent value: {{parentValue}}</p>
+            <child v-model="parentValue"></child>
     </div>
     <script>
         var myDatepicker = {
-            props: '',
-            template: '<input type="text" name="" :id="datepickerId" class="Wdate" @click="clickDate" />',
-            data: {
-                datepickerId: new Date().getTime()
+            props: 'acutallyDate',
+            template: '<div><input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" /><br/> Selected:{{myDate}}</div>',
+            data: function () {
+                return {
+                    myDate: 'Hello World!'
+                }
             },
-            computed:{
+            computed: {
                 'datepickerId'() {
                     return this.generateUUID();
                 }
             },
+            mount: {
+
+            },
             methods: {
                 clickDate() {
-                    //alert("User Click");
                     var _this = this;
                     WdatePicker({
-                        el: targetId,
-                        onpicked() {
-                            _this.fors[idx][modelName] = $dp.cal.getDateStr();
+                        el: _this.datepickerId,
+                        onpicked(value) {
+                            _this.myDate = $dp.cal.getDateStr();
+                            _this.acutallyDate = _this.myDate;
+                            _this.$emit('sendDate', value);
                         },
                         oncleared() {
-                            _this.fors[idx][modelName] = '';
+                            _this.myDate = '';
                         },
                     });
                 },
                 generateUUID() {
-                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                         return v.toString(16);
                     });
                 }
             }
         };
 
+        var childToParent = {
+            template: '<input type="text" v-bind:value="value2" v-on:input="updateValue($event.target.value)">',
+            props: ['value2'],
+            methods: {
+                updateValue: function (vale) {
+                    this.$emit('input', vale);
+                }
+            }
+        };
+
+       
+
         var vue = new Vue({
             el: '#app',
             components: {
                 'datepicker': myDatepicker,
+                'child': childToParent
             },
             data: {
+                parentValue: '',
                 test: 'test2',
                 date1: '',
+                testDate: 'testDates',
                 fors: [
                     { date: 'A' },
                     { date: 'B' },
