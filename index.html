@@ -1,0 +1,45 @@
+<html>
+    <!-- WdatePicker only can use id -->
+    <head>
+        <link rel="styeSheet" href="My97DatePicker/skin/WdatePicker.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+        <script src="My97DatePicker/WdatePicker.js"></script>
+
+        
+    </head> 
+    <body>
+        <div id="app">
+        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1" @click="clickDate('datePick1')"/>
+
+            {{test}} <br/>
+            SelectDate: {{date1}}
+            
+        </div>
+        <script>
+        var vue = new Vue({
+            el: '#app',
+            data:{
+                test:'test2',
+                date1: '',
+            },
+            methods:{
+                clickDate(targetId, $event) {
+                    var _this = this;
+                    console.log($event);
+                    WdatePicker({
+                        el: targetId,
+                        isShowWeek:true,
+                        onpicked() {
+                            _this.date1 = $dp.cal.getDateStr();
+                        },
+                        oncleared(){
+                            _this.date1 = '';
+                        },
+                    });
+                }
+            }
+        });
+        </script>
+    </body>
+</html>
