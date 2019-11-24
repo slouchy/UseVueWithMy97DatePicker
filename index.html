@@ -34,7 +34,28 @@
         <child v-model="parentValue"></child>
     </div>
     <script>
+        /* <body>
+         *      <datepicker v-model="startDate" :show-week="true" :date-format="'yyyy/MM/dd'"></datepicker>
+         *      <div v-for="item in arrays">
+         *          <datepicker v-model="date"></datepicker>
+         *      </div>
+         * </body>
+         * <script>
+         *  var vue = new Vue({
+         *      el: '#app',
+         *      components: {
+         *       'datepicker': myDatepicker,
+         *      },
+         *      data: {
+         *          startDate: '',
+         *          arrays:[{date:''},{date:''}]
+         *      }
+         * });
+         * /script>
+         */ 
+
         var myDatepicker = {
+            // props 屬性外部使用-符號，內部使用小駝峰命名
             props:["show-week", "date-format", "min-date", "max-date"],
             template: '<input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" />',
             data: function () {
@@ -53,7 +74,11 @@
                 }
             },
             methods: {
-                clickDate() {
+                /**
+                 * 透過 My97Datepicker 取得日曆和時間
+                 */
+                clickDate: function() {
+                    // WdatePicker 內的項目可能有其他 this，避免 this 被汙染
                     var _this = this;
                     WdatePicker({
                         enableInputMask: false,
@@ -62,18 +87,25 @@
                         minDate:_this.minDate || '',
                         maxDate:_this.maxDate || '',
                         el: _this.datepickerId,
-                        onpicked() {
+                        onpicked: function() {
                             _this.myDate = $dp.cal.getDateStr();
                         },
-                        oncleared() {
+                        oncleared: function() {
                             _this.myDate = '';
                         },
                     });
                 },
-                sendToParent() {
+                /**
+                 * 將 Datepicker 取得項目傳至主要 model
+                 */
+                sendToParent: function() {
                     this.$emit('input', this.myDate);
-                },
-                generateUUID() {
+                },                
+                /**
+                 * 產生唯一碼 for 日期列的 id 值
+                 * @returns {any}
+                 */
+                generateUUID: function() {
                     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                         return v.toString(16);
@@ -81,7 +113,8 @@
                 }
             }
         };
-
+</script>
+<script>
         var childToParent = {
             template: '<div><input type="text" v-model="childVal" v-on:input="updateValue()"></div>',
             props: ['value2'],
