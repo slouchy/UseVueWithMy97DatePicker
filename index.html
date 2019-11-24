@@ -31,19 +31,18 @@
         <datepicker v-model="testDate"></datepicker>
         {{testDate}}
 
-        
-            <p>Parent value: {{parentValue}}</p>
-            <child v-model="parentValue"></child>
+
+        <p>Parent value: {{parentValue}}</p>
+        <child v-model="parentValue"></child>
     </div>
     <script>
         var myDatepicker = {
-            props: 'acutallyDate',
             template: `<div>
                 <input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" /><br/> 
                 Selected:{{myDate}}</div>`,
             data: function () {
                 return {
-                    myDate: 'Hello World!'
+                    myDate: ''
                 }
             },
             computed: {
@@ -51,28 +50,27 @@
                     return this.generateUUID();
                 }
             },
-            mount: {
-
+            watch: {
+                'myDate'() {
+                    this.sendToParent();
+                }
             },
             methods: {
                 clickDate() {
                     var _this = this;
                     WdatePicker({
+                        enableInputMask: false,
                         el: _this.datepickerId,
                         onpicked() {
                             _this.myDate = $dp.cal.getDateStr();
-                            // _this.acutallyDate = _this.myDate;
-                             _this.$emit('input', $dp.cal.getDateStr());
                         },
                         oncleared() {
                             _this.myDate = '';
                         },
                     });
                 },
-                sendToParent(){
-                    console.log("123");
+                sendToParent() {
                     this.$emit('input', this.myDate);
-
                 },
                 generateUUID() {
                     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -86,9 +84,9 @@
         var childToParent = {
             template: '<div><input type="text" v-model="childVal" v-on:input="updateValue()"></div>',
             props: ['value2'],
-            data: function(){
+            data: function () {
                 return {
-                    childVal:'123'
+                    childVal: '123'
                 }
             },
             methods: {
@@ -99,7 +97,7 @@
             }
         };
 
-       
+
 
         var vue = new Vue({
             el: '#app',
@@ -130,6 +128,8 @@
                     WdatePicker({
                         el: targetId,
                         isShowWeek: true,
+                        autoPickDate: true,
+                        enableInputMask: false,
                         onpicked() {
                             _this[modelName] = $dp.cal.getDateStr();
                         },
