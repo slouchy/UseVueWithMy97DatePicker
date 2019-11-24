@@ -19,16 +19,14 @@
         <br />
         <!--  @click="clickDate('dateFor' + i, 'fors.date')"  -->
         <div v-for="(item, i) in fors">
-            {{i}}. <input type="text" name="" :id="'dateFor' + i" class="Wdate"
-                @click="clickDate2('dateFor' + i,i, 'date')" />
-            <br />
+            {{i}}.<datepicker v-model="item.date"></datepicker><br />
             {{item.date}}
             <br />
         </div>
         <br />
         <br />
 
-        <datepicker v-model="testDate"></datepicker>
+        <datepicker v-model="testDate" :show-week="true" :date-format="'yyyy/MM/dd'"></datepicker>
         {{testDate}}
 
 
@@ -37,9 +35,8 @@
     </div>
     <script>
         var myDatepicker = {
-            template: `<div>
-                <input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" /><br/> 
-                Selected:{{myDate}}</div>`,
+            props:["show-week", "date-format", "min-date", "max-date"],
+            template: '<input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" />',
             data: function () {
                 return {
                     myDate: ''
@@ -60,6 +57,10 @@
                     var _this = this;
                     WdatePicker({
                         enableInputMask: false,
+                        isShowWeek: _this.showWeek || false,
+                        dateFmt:_this.dateFormat || 'yyyy-MM-dd',
+                        minDate:_this.minDate || '',
+                        maxDate:_this.maxDate || '',
                         el: _this.datepickerId,
                         onpicked() {
                             _this.myDate = $dp.cal.getDateStr();
@@ -111,9 +112,9 @@
                 date1: '',
                 testDate: 'testDates',
                 fors: [
-                    { date: 'A' },
-                    { date: 'B' },
-                    { date: 'C' },
+                    { date: '沒有日期' },
+                    { date: '沒有日期' },
+                    { date: '沒有日期' },
                 ],
                 fors2: [
                     { date: 'A' },
