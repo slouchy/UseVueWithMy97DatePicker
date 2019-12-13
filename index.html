@@ -12,7 +12,7 @@
 
 <body>
     <div id="app">
-        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1"
+        <input type="text" name="" class="Wdate myWd" id="datePick1" v-model="date1" :value="query.payDate"
             @click="clickDate('datePick1', 'date1')" />
         {{test}} <br />
         SelectDate: {{date1}}
@@ -26,7 +26,7 @@
         <br />
         <br />
 
-        <datepicker v-model="testDate" :show-week="true" :date-format="'yyyy/MM/dd'"></datepicker>
+        <datepicker v-model="testDate" :show-week="true" :date-format="'yyyy/MM/dd'" :value="query.payDate"></datepicker>
         {{testDate}}
 
 
@@ -56,8 +56,8 @@
 
         var myDatepicker = {
             // props 屬性外部使用-符號，內部使用小駝峰命名
-            props:["show-week", "date-format", "min-date", "max-date"],
-            template: '<input type="text" class="Wdate" :id="datepickerId" v-model="myDate" @click="clickDate" />',
+            props: ["show-week", "date-format", "min-date", "max-date", "value"],
+            template: '<input type="text" :id="datepickerId" v-model="value" @click="clickDate" />',
             data: function () {
                 return {
                     myDate: ''
